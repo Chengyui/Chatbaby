@@ -2,14 +2,19 @@ import warnings
 warnings.filterwarnings("ignore", category=Warning)
 
 import streamlit as st
-import st_pages 
+import st_pages
+import chardet
 
 # Set page config
 st.set_page_config(page_title="Chatbaby - Ollama Interface", layout="wide", page_icon="🤖")
 
 # Load custom CSS from file
 def load_css(file_name):
-    with open(file_name) as f:
+    # suitable for windows encoding
+    with open(file_name,'rb') as file:
+        raw_data = file.read()
+        encoding = chardet.detect(raw_data)['encoding']
+    with open(file_name,'r',encoding=encoding) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 load_css('styles.css')
@@ -35,6 +40,13 @@ PAGES = {
         "icon": "chat-dots",
         "func": st_pages.ai_chatbot,
         "description": "Interactive AI Chat",
+        "badge": "Application",
+        "color": "var(--highlight-color)"
+    },
+    "Chat With Picture": {
+        "icon": "chat-dots",
+        "func": st_pages.chatwithpic,
+        "description": "AI Chat with pictures",
         "badge": "Application",
         "color": "var(--highlight-color)"
     },
